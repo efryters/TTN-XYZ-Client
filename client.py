@@ -21,8 +21,8 @@ access_key = "ttn-account-v2.-iuXckSlRsK5ReT8eh2Np-34RVwoXMeMPNIDlr0jITM"
 device_id = "nucleo-all-sensors"
 
 # Moisture calibration info
-moisture_cal_air = 1000;
-moisture_cal_water = 500;
+moisture_cal_air = 3550;
+moisture_cal_water = 1750;
 
 # Data
 temperature_raw = []
@@ -60,6 +60,7 @@ def decode_payload(bytes_in):
   # shift data as per decoder on TTN
   dt = datetime.today()
   print("[" + dt.strftime("%D %H:%M:%S") + "] MSG-UPLINK: Temperature: " + procTemp_fixed.to_eng_string() + "; Moisture: " + moisture_fuzzy_out(moisture) + "; Lux: " + lux_fixed.to_eng_string())
+  print("Raw Moisture: " + str((moisture)))
 
 def uplink_callback(msg, client):
   #print("Received uplink from ", msg.dev_id)
@@ -90,50 +91,55 @@ def main():
     # check queue for raw data and process if there is
     if not msg_queue.qsize() == 0:
       raw_str = msg_queue.get()
+      
       if isinstance(raw_str, NotImplementedError):
-        raise raw_str
-      decode_payload(raw_str)
+        pass
+      else:
+        decode_payload(raw_str)
+        # build the plots
+        fig = make_subplots(
+          rows=3, cols=1,
+          subplot_titles=("Temperature", "Moisture", "Light")
+          )
 
-    # build the plots
+        # temperature
+        fig.append_trace(
+          go.Scatter(y=temperature_raw),
+          row=1, col=1
+        )
+        # moisture
+        fig.append_trace(
+          go.Scatter(y=moisture_raw),
+          row=2, col=1
+        )
+        # lux
+        fig.append_trace(
+          go.Scatter(y=light_raw),
+          row=3, col=1
+        )
 
-    fig = make_subplots(
-      rows=3, cols=1,
-      subplot_titles=("Temperature", "Moisture", "Light")
-      )
+        #fig = go.Figure(data=go.Line(y=temperature_raw))
+        fig.update_layout(
+          title_text="Sensor readings"
+        )
 
-    # temperature
-    fig.append_trace(
-      go.Scatter(y=temperature_raw),
-      row=1, col=1
-    )
-    # moisture
-    fig.append_trace(
-      go.Scatter(y=moisture_raw),
-      row=2, col=1
-    )
-    # lux
-    fig.append_trace(
-      go.Scatter(y=light_raw),
-      row=3, col=1
-    )
+        # update each plot axis
+        # Update xaxis properties
+        fig.update_xaxes(title_text="Time", row=1, col=1) # Tempeature
+        fig.update_xaxes(title_text="Time", row=2, col=1) # Moisture
+        fig.update_xaxes(title_text="Time", row=3, col=1) # Light
 
-    #fig = go.Figure(data=go.Line(y=temperature_raw))
-    fig.update_layout(
-      title_text="Sensor readings"
-    )
+        # Update yaxis properties
+        fig.update_yaxes(title_text="Temperature (C)", row=1, col=1)
+        fig.update_yaxes(title_text="Moisture (raw)", row=2, col=1)
+        fig.update_yaxes(title_text="Light Sense (lux)", row=3, col=1)
 
-    # update each plot axis
-    # Update xaxis properties
-    fig.update_xaxes(title_text="Time", row=1, col=1) # Tempeature
-    fig.update_xaxes(title_text="Time", row=2, col=1) # Moisture
-    fig.update_xaxes(title_text="Time", row=3, col=1) # Light
+        fig.write_html('chart.html', auto_open=False)
+        #raise raw_str
+      
 
-    # Update yaxis properties
-    fig.update_yaxes(title_text="Temperature (C)", row=1, col=1)
-    fig.update_yaxes(title_text="Moisture (raw)", row=2, col=1)
-    fig.update_yaxes(title_text="Light Sense (lux)", row=3, col=1)
 
-    fig.write_html('chart.html', auto_open=False)
+
     pass
   #mqtt_client.close()
 
