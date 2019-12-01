@@ -10,10 +10,11 @@ from decimal import Decimal, ROUND_DOWN
 import queue
 import ttn
 import base64
-from ttn import MQTTClient
 
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
+
+from sql_conn import SQL_Database
 
 # Access info
 app_id = "capstone-testing"
@@ -77,6 +78,9 @@ def connect_callback(res, client):
     print("Connection problem with TTN.")
 
 
+"""
+Entry-point for application
+"""
 def main():
   # setup ttn connection
   handler = ttn.HandlerClient(app_id, access_key)
