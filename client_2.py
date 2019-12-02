@@ -14,9 +14,9 @@ from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 
 # Custom libraries
-from sql_conn import SQL_Database
-from ttn_mqtt_client import TTN_MQTT_Client
-from payload_decoder import Payload_Decoder
+from py_app_components import Payload_Decoder
+from py_app_components import TTN_MQTT_Client
+from py_app_components import SQL_Database
 
 # Access info
 ttn_conn_info = {

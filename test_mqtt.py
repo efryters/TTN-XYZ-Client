@@ -1,4 +1,4 @@
-from ttn_mqtt_client import TTN_MQTT_Client
+from py_app_components import TTN_MQTT_Client
 
 def main():
 
