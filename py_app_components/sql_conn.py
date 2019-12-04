@@ -30,6 +30,7 @@ class SQL_Database:
                     self.connection = Connection(self.db_file)
                     print("[SQL] Created db " + self.db_file)
                     self.make_table()
+                    return True
 
                 except Exception as e:
                     return e
@@ -51,7 +52,7 @@ class SQL_Database:
         pass
 
     def get_sensor_data(self, get_type):
-        query = """ SELECT * FROM "ttn-data"
+        query = """ SELECT (date, device_id, light, temperature, moisture) FROM "ttn-data"
                     WHERE date >= ?
                     AND   date <= ?
                 """

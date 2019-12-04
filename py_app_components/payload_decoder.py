@@ -18,7 +18,7 @@ class Payload_Decoder():
         self.moisture_cal_air       = cal_air
         self.moisture_cal_water     = cal_water
 
-    def decode_payload(self, bytes_in):
+    def decode_payload(self, bytes_in, return_single=False):
         raw_bytes       = base64.decodebytes(bytes_in.encode())
         exponent        = raw_bytes[1];
         mantissa        = raw_bytes[2];
@@ -38,7 +38,11 @@ class Payload_Decoder():
         dt = datetime.today()
         print("[" + dt.strftime("%D %H:%M:%S") + "] MSG-UPLINK: Temperature: " + procTemp_fixed.to_eng_string() + "; Moisture: " + self.moisture_fuzzy_out(moisture) + "; Lux: " + lux_fixed.to_eng_string())
         print("Raw Moisture: " + str((moisture)))
-        return [ self.temperature_raw, self.moisture_raw, self.light_raw ]
+        
+        if return_single:
+            return [procTemp_fixed, moisture, lux_fixed]
+        else:
+            return [ self.temperature_raw, self.moisture_raw, self.light_raw ]
 
     def moisture_fuzzy_out(self, moisture_in):
         moisture_sections = (self.moisture_cal_air - self.moisture_cal_water) / 3
