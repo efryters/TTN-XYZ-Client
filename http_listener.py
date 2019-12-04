@@ -1,18 +1,19 @@
-# Serves database data to browser
+# Eric Fryters
+# Flask app to serve database data and UI to browser
 
-from flask import Flask, request, Response
+from flask import Flask, request, Response, render_template
 
 from py_app_components import SQL_Database
 
 import json
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='./web/', static_folder="./web/")
 
 
 @app.route('/')
-def hello_world():
-    return 'Hello, World!'
-
+@app.route('/index.html')
+def index_html():
+    return render_template("index.html")
 
 @app.route('/get_data')
 def get_from_sql():
@@ -47,4 +48,5 @@ def get_from_sql():
     
 
 if __name__ == '__main__':
-    app.run()
+    
+    app.run(host="0.0.0.0")
