@@ -2,14 +2,6 @@
 # App to receive data from TTN API
 # and plot to graphs for Thursday demo
 
-import time
-from datetime import date, datetime
-import signal
-import math
-from decimal import Decimal, ROUND_DOWN
-import queue
-import base64
-
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 
