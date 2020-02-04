@@ -15,15 +15,19 @@ var xhr = new XMLHttpRequest();
 
 // Run when chart.html loads
 var loaded = function () {
-    console.log("Loaded page");
 
     let param_type = getParameterByName('type');
+    let device_id = getParameterByName('device_id');
 
     if (param_type == "latest") {
+	setTimeout(function() {
+	  location.reload();
+	}, 30000);
         let api_obj = {
-            "type": param_type
+            "type": param_type,
+            "device_id": device_id
         };
-        xhr.open('GET', `./get_data?type=${api_obj.type}`, true);
+        xhr.open('GET', `./get_data?type=${api_obj.type}&device_id=${api_obj.device_id}`, true);
     } else if (param_type == "ranged") {
         let time_from = getParameterByName('from');
         let time_to = getParameterByName('to');
@@ -31,9 +35,10 @@ var loaded = function () {
         let api_obj = {
             "type": param_type,
             "from": time_from,
-            "to": time_to
+            "to": time_to,
+            "device_id": device_id
         };
-        xhr.open('GET', `./get_data?type=${api_obj.type}&time_from=${api_obj.from}&time_to=${api_obj.to}`, true);
+        xhr.open('GET', `./get_data?type=${api_obj.type}&time_from=${api_obj.from}&time_to=${api_obj.to}&device_id=${api_obj.device_id}`, true);
     } else {
         return null;
     }

@@ -38,42 +38,9 @@
         <script type="text/javascript" src="bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
         <link rel="stylesheet" href="bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
 
-        <!-- Script for button functions -->
-        <script type="text/javascript">
-            
-            
-            var btn_latest_click = () =>
-            {
-                location.replace("./chart.html?type=latest")
-            }
-            
-            var btn_ranged_click = () =>
-            {
-                var date_from = $("#datetimepicker6").children()[0];
-                var date_to = $("#datetimepicker7").children()[0];
-                
-                var epoch_from, epoch_to = 0;
-
-                if (date_from.value != "" || date_to.value != "")
-                {
-                    epoch_from = (new Date(date_from.value).valueOf()) / 1000;
-                    epoch_to = (new Date(date_to.value).valueOf()) / 1000;
-                }
-                else
-                {
-                    alert("Date boxes cannot be empty.")
-                }
-
-                if(epoch_from != 0 || epoch_to != 0)
-                {
-                    location.replace(`./chart.html?type=ranged&from=${epoch_from.toString()}&to=${epoch_to.toString()}`);
-                }
-            }
-        
-        </script>
-
+        <script type="text/javascript" src="js/index_page.js"></script>
     </head>
-    <body>
+    <body onload="loaded()">
     <nav class="navbar navbar-inverse navbar-fixed-top">
             <div class="container">
                 <div class="navbar-header">
@@ -90,6 +57,12 @@
 
     <div class="container">
         <div class="main-content">
+            <div class="container">
+                <h3>Device selection:</h3>
+                <select id="devices">
+
+                </select>
+            </div>
             <div class="container">
             <h3>Current dataset of last 30 minutes:</h3>
             <button onclick="btn_latest_click()" type="button" class="btn btn-primary"><span class="glyphicon glyphicon-file" aria-hidden="true"> </span> Show chart</button>

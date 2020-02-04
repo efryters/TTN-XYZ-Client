@@ -16,10 +16,10 @@ class TTN_MQTT_Client():
         self.mqtt_client.set_connect_callback(self.__connect_callback)
 
     def __uplink_callback(self, msg, client):
-        if msg.dev_id == self.device_id:
-            self.msg_queue.put(msg)
-        else:
-            self.msg_queue.put(NotImplementedError("Device ID non-existant"))
+        #if msg.dev_id == self.device_id:
+        self.msg_queue.put(msg)
+        #else:
+        #    self.msg_queue.put(NotImplementedError("Device ID non-existant"))
 
     def __connect_callback(self, res, client):
         if res:

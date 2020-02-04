@@ -7,7 +7,7 @@ from py_app_components import Payload_Decoder
 # Access info
 ttn_conn_info = {
     "app_id": "capstone-testing",
-    "access_key": "ttn-account-v2.-iuXckSlRsK5ReT8eh2Np-34RVwoXMeMPNIDlr0jITM",
+    "access_key": "ttn-account-v2.d-twriMNDaeMQtzMyr1afJfOCynrwHtQoHDKRJ1khKU",
     "device_id": "nucleo-all-sensors"
 }
 
@@ -34,16 +34,20 @@ def main():
             pass
 
         # check queue for raw data and process if there is
-            raw_str = ttn_client.get_data().payload_raw
-            if isinstance(raw_str, NotImplementedError):
+            
+            raw_msg = ttn_client.get_data()
+            if isinstance(raw_msg, NotImplementedError):
+                print("[TTN-MQTT] Received other device data. Ignored.")
                 pass
             else:
+                raw_str = raw_msg.payload_raw
                 # Send data to the client
                 [temperature_raw, moisture_raw, light_raw] = payload_decoder.decode_payload(
                     raw_str, return_single=True)
 
+
                 data_to_db = [
-                    ttn_conn_info["device_id"],
+                    raw_msg.dev_id,
                     float(light_raw),
                     float(temperature_raw),
                     moisture_raw
@@ -53,6 +57,7 @@ def main():
                 if sql_db.open_database(): 
                     sql_db.insert_sensor_data(data_to_db)
                     sql_db.close_database()
+                    print("[TTN-MQTT] Sent device " + raw_msg.dev_id + " to database.")
                 else:
                     print("[TTN-MQTT] Error sending to database.")
 
