@@ -28,31 +28,13 @@
     <!-- Charts.js -->
     <script src="bower_components/chart.js/dist/Chart.js"></script>
 
-    <!-- Page features -->
-    <style>
-        body {
-            padding-top: 50px;
-        }
-
-        .main-content {
-            padding: 40px 15px;
-            text-align: left;
-        }
-
-        .chart-container {
-            position: relative;
-            margin: auto;
-            height: 20vh;
-            width: 80vw;
-        }
-
-    </style>
-
     <script type="text/javascript" src="bower_components/moment/min/moment.min.js"></script>
     <script type="text/javascript"
         src="bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
     <link rel="stylesheet"
         href="bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
+
+    <link rel="stylesheet" href="css/chart_page.css">
 </head>
 
 <body onload="loaded()">
@@ -72,7 +54,7 @@
     </nav>
 
     <div class="chart-container">
-        <canvas id="myChart" style="position: relative; height:90vh; width:80vw"></canvas>
+        <canvas id="myChart"></canvas>
         <script src="js/chart_page.js"></script>
     </div>
 
