@@ -40,28 +40,31 @@ def main():
                 print("[TTN-MQTT] Received other device data. Ignored.")
                 pass
             else:
-                raw_str = raw_msg.payload_raw
+                try:
+                    raw_str = raw_msg.payload_raw
                 # Send data to the client
-                [temperature_raw, moisture_raw, light_raw] = payload_decoder.decode_payload(
-                    raw_str, return_single=True)
+                    [temperature_raw, moisture_raw, light_raw] = payload_decoder.decode_payload(
+                        raw_str, return_single=True)
 
 
-                data_to_db = [
-                    raw_msg.dev_id,
-                    float(light_raw),
-                    float(temperature_raw),
-                    moisture_raw
-                ]
-                
-                # Insert the data to SQL table
-                if sql_db.open_database(): 
-                    sql_db.insert_sensor_data(data_to_db)
-                    sql_db.close_database()
-                    print("[TTN-MQTT] Sent device " + raw_msg.dev_id + " to database.")
-                else:
-                    print("[TTN-MQTT] Error sending to database.")
+                    data_to_db = [
+                        raw_msg.dev_id,
+                        float(light_raw),
+                        float(temperature_raw),
+                        moisture_raw
+                    ]
 
-
+                    # Insert the data to SQL table
+                    if sql_db.open_database(): 
+                        sql_db.insert_sensor_data(data_to_db)
+                        sql_db.close_database()
+                        print("[TTN-MQTT] Sent device " + raw_msg.dev_id + " to database.")
+                    else:
+                        print("[TTN-MQTT] Error sending to database.")
+                except Exception as e:
+                    print("[TTN-MQTT] Error: invalid data in.")
+                    data_to_db = []
+                               
 
 if __name__ == "__main__":
     main()
