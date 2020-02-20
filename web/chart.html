@@ -35,6 +35,7 @@
         href="bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
 
     <link rel="stylesheet" href="css/chart_page.css">
+    <script src="js/chart_page.js"></script>
 </head>
 
 <body onload="loaded()">
@@ -61,17 +62,35 @@
                 <h3>Data Presentation</h3>
                 <div class="chart-container">
                     <canvas id="myChart"></canvas>
-                    <script src="js/chart_page.js"></script>
                 </div>
             </div>
             <div class="col-sm">x</div>
         </div>
+        <div class="row">
+            <h4>Linear Regression</h4>
+            <label for="xData">X-Axis data: </label>
+            <select id="xData">
+                <option>Light</option>
+                <option>Temperature</option>
+                <option>Moisture</option>
+            </select>
+            <label for="yData">Y-Axis data: </label>
+            <select id="yData">
+                <option>Light</option>
+                <option>Temperature</option>
+                <option>Moisture</option>
+            </select>
+            <button onclick="btn_lregression_click()" type="button" class="btn btn-primary"><span class="glyphicon glyphicon-fire" aria-hidden="true"> </span> Perform Linear Regression</button>
+        </div>
 
         <br>
-        <div class="row">
+        <div class="d-none row">
             <div class="col-sm">x</div>
             <div class="col-sm">
                 <h3>Statistical</h3>
+                <div class="chart-container">
+                    <canvas id="myChart2"></canvas>
+                </div>
             </div>
             <div class="col-sm">x</div>
         </div>
