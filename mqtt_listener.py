@@ -3,6 +3,7 @@
 from py_app_components import TTN_MQTT_Client
 from py_app_components import SQL_Database
 from py_app_components import Payload_Decoder
+import time
 
 # Access info
 ttn_conn_info = {
@@ -31,39 +32,40 @@ def main():
     while True:
 
         while(not ttn_client.has_data()):
+            time.sleep(0.1)    
             pass
 
         # check queue for raw data and process if there is
             
-            raw_msg = ttn_client.get_data()
-            if isinstance(raw_msg, NotImplementedError):
-                print("[TTN-MQTT] Received other device data. Ignored.")
-                pass
-            else:
-                try:
-                    raw_str = raw_msg.payload_raw
-                # Send data to the client
-                    [temperature_raw, moisture_raw, light_raw] = payload_decoder.decode_payload(
-                        raw_str, return_single=True)
+        raw_msg = ttn_client.get_data()
+        if isinstance(raw_msg, NotImplementedError):
+            print("[TTN-MQTT] Received other device data. Ignored.")
+            pass
+        else:
+            try:
+                raw_str = raw_msg.payload_raw
+            # Send data to the client
+                [temperature_raw, moisture_raw, light_raw] = payload_decoder.decode_payload(
+                    raw_str, return_single=True)
 
 
-                    data_to_db = [
-                        raw_msg.dev_id,
-                        float(light_raw),
-                        float(temperature_raw),
-                        moisture_raw
-                    ]
+                data_to_db = [
+                    raw_msg.dev_id,
+                    float(light_raw),
+                    float(temperature_raw),
+                    moisture_raw
+                ]
 
-                    # Insert the data to SQL table
-                    if sql_db.open_database(): 
-                        sql_db.insert_sensor_data(data_to_db)
-                        sql_db.close_database()
-                        print("[TTN-MQTT] Sent device " + raw_msg.dev_id + " to database.")
-                    else:
-                        print("[TTN-MQTT] Error sending to database.")
-                except Exception as e:
-                    print("[TTN-MQTT] Error: invalid data in.")
-                    data_to_db = []
+                # Insert the data to SQL table
+                if sql_db.open_database(): 
+                    sql_db.insert_sensor_data(data_to_db)
+                    sql_db.close_database()
+                    print("[TTN-MQTT] Sent device " + raw_msg.dev_id + " to database.")
+                else:
+                    print("[TTN-MQTT] Error sending to database.")
+            except Exception as e:
+                print("[TTN-MQTT] Error: invalid data in.")
+                data_to_db = []
                                
 
 if __name__ == "__main__":
